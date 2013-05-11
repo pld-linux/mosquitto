@@ -25,6 +25,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Suggests:	%{name}-clients
 Provides:	group(mosquitto)
 Provides:	user(mosquitto)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
