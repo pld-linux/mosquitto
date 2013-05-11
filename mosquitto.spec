@@ -14,7 +14,9 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	openssl-devel
 BuildRequires:	python-devel
+BuildRequires:	python-modules
 BuildRequires:	python-setuptools
+BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sqlite3-devel >= 3.5
 Requires(postun):	/usr/sbin/groupdel
