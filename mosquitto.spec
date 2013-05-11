@@ -1,5 +1,5 @@
 # TODO
-# - user, initscript
+# - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
 Version:	1.1.3
@@ -17,6 +17,14 @@ BuildRequires:	python-devel
 BuildRequires:	python-setuptools
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sqlite3-devel >= 3.5
+Requires(postun):	/usr/sbin/groupdel
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Provides:	group(mosquitto)
+Provides:	user(mosquitto)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -123,8 +131,13 @@ cd lib/python
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-groupadd -r %{name}
-useradd -r -g %{name} -d %{_sysconfdir}/%{name} -s /sbin/nologin -c "Mosquitto Broker" %{name}
+%groupadd -g 293 -r mosquitto
+%useradd -u 293 -r -g mosquitto -d %{_sysconfdir}/%{name} -s /sbin/nologin -c "Mosquitto Broker" mosquitto
+
+if [ "$1" = "0" ]; then
+	%userremove mosquitto
+	%groupremove mosquitto
+fi
 
 %post	-n libmosquitto -p /sbin/ldconfig
 %postun	-n libmosquitto -p /sbin/ldconfig
