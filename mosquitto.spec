@@ -2,21 +2,17 @@
 # - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	1.1.3
+Version:	1.4.14
 Release:	0.1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	fd0cae17221d778b0a002c31e6c3de9e
+# Source0-md5:	6b0966e93f118bc71ad7b61600a6c2d3
 URL:		http://mosquitto.org/
 BuildRequires:	cmake
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	openssl-devel
-BuildRequires:	python-devel
-BuildRequires:	python-modules
-BuildRequires:	python-setuptools
-BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sqlite3-devel >= 3.5
 Requires(postun):	/usr/sbin/groupdel
@@ -87,19 +83,6 @@ This is a library that provides a means of implementing MQTT version 3
 clients. MQTT provides a lightweight method of carrying out messaging
 using a publish/subscribe model.
 
-%package -n python-%{name}
-Summary:	MQTT Python client library
-Group:		Development/Languages/Python
-Requires:	%{name} = %{version}-%{release}
-%if "%{_rpmversion}" >= "5"
-BuildArch:	noarch
-%endif
-
-%description -n python-%{name}
-This is a library that provides a means of implementing MQTT version 3
-clients. MQTT provides a lightweight method of carrying out messaging
-using a publish/subscribe model.
-
 %prep
 %setup -q
 
@@ -112,23 +95,9 @@ cd build
 %{__make}
 cd ..
 
-cd lib/python
-%{__python} setup.py build
-
 %install
-rm -rf $RPM_BUILD_ROOT
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-rm $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/*.example
-
-cd lib/python
-%{__python} setup.py install \
-	--skip-build \
-	--optimize=2 \
-	--root $RPM_BUILD_ROOT
-
-%py_postclean
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -150,7 +119,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc LICENSE.txt readme.txt *.example
+%doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt readme.md examples
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
@@ -189,8 +158,3 @@ fi
 %defattr(644,root,root,755)
 %{_libdir}/libmosquittopp.so
 %{_includedir}/mosquittopp.h
-
-%files -n python-%{name}
-%defattr(644,root,root,755)
-%{py_sitescriptdir}/mosquitto.py[co]
-%{py_sitescriptdir}/mosquitto-%{version}-*.egg-info
