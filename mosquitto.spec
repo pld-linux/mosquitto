@@ -2,12 +2,12 @@
 # - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	1.4.14
+Version:	1.5.1
 Release:	0.1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	6b0966e93f118bc71ad7b61600a6c2d3
+# Source0-md5:	f98c99998a36a234f3a9d9b402b991db
 URL:		http://mosquitto.org/
 BuildRequires:	cmake
 BuildRequires:	libstdc++-devel
@@ -96,8 +96,13 @@ cd build
 cd ..
 
 %install
+rm -rf $RPM_BUILD_ROOT
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+:> $RPM_BUILD_ROOT/etc/mosquitto/aclfile
+:> $RPM_BUILD_ROOT/etc/mosquitto/pskfile
+:> $RPM_BUILD_ROOT/etc/mosquitto/pwfile
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,6 +127,9 @@ fi
 %doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt readme.md examples
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
+%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
+%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
+%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pwfile
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
 %{_mandir}/man1/mosquitto_passwd.1*
@@ -146,8 +154,11 @@ fi
 %defattr(644,root,root,755)
 %{_mandir}/man3/libmosquitto.3*
 %{_libdir}/libmosquitto.so
+%{_includedir}/mosquitto_broker.h
 %{_includedir}/mosquitto.h
 %{_includedir}/mosquitto_plugin.h
+%{_pkgconfigdir}/libmosquitto.pc
+%{_pkgconfigdir}/libmosquittopp.pc
 
 %files -n libmosquittopp
 %defattr(644,root,root,755)
