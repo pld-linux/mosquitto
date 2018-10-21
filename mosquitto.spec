@@ -3,7 +3,7 @@
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
 Version:	1.5.1
-Release:	0.1
+Release:	1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
