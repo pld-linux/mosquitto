@@ -2,12 +2,12 @@
 # - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	1.5.1
-Release:	1
+Version:	1.6.9
+Release:	0.1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	f98c99998a36a234f3a9d9b402b991db
+# Source0-md5:	52f5078ec18aaf623b14dfb121fd534b
 URL:		http://mosquitto.org/
 BuildRequires:	cmake
 BuildRequires:	libstdc++-devel
@@ -91,6 +91,7 @@ install -d build
 cd build
 %cmake \
 	-DUSE_LIBWRAP:BOOL=ON \
+	-DWITH_BUNDLED_DEPS:BOOL=ON \
 	..
 %{__make}
 cd ..
@@ -141,8 +142,10 @@ fi
 %files clients
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mosquitto_pub
+%attr(755,root,root) %{_bindir}/mosquitto_rr
 %attr(755,root,root) %{_bindir}/mosquitto_sub
 %{_mandir}/man1/mosquitto_pub.1*
+%{_mandir}/man1/mosquitto_rr.1*
 %{_mandir}/man1/mosquitto_sub.1*
 
 %files -n libmosquitto
