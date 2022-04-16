@@ -2,14 +2,15 @@
 # - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	1.6.9
-Release:	2
+Version:	2.0.14
+Release:	1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	52f5078ec18aaf623b14dfb121fd534b
+# Source0-md5:	abe42d8cdb4ec973bdbecc6da29cb98f
 URL:		http://mosquitto.org/
 BuildRequires:	cmake
+BuildRequires:	cjson-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	openssl-devel
@@ -101,9 +102,10 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-:> $RPM_BUILD_ROOT/etc/mosquitto/aclfile
-:> $RPM_BUILD_ROOT/etc/mosquitto/pskfile
-:> $RPM_BUILD_ROOT/etc/mosquitto/pwfile
+for file in aclfile pskfile pwfile ; do
+	%{__rm} $RPM_BUILD_ROOT/etc/mosquitto/$file.example
+	:> $RPM_BUILD_ROOT/etc/%{name}/$file
+done
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -125,14 +127,17 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt readme.md examples
+%doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt README.md examples aclfile.example mosquitto.conf pskfile.example pwfile.example
 %dir %{_sysconfdir}/%{name}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
 %attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
 %attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
 %attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pwfile
+%attr(755,root,root) %{_bindir}/mosquitto_ctrl
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
+%{_mandir}/man1/mosquitto_ctrl.1*
+%{_mandir}/man1/mosquitto_ctrl_dynsec.1*
 %{_mandir}/man1/mosquitto_passwd.1*
 %{_mandir}/man5/mosquitto.conf.5*
 %{_mandir}/man7/mosquitto-tls.7*
@@ -151,6 +156,7 @@ fi
 %files -n libmosquitto
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libmosquitto.so.*.*.*
+%attr(755,root,root) %{_libdir}/mosquitto_dynamic_security.so
 %ghost %{_libdir}/libmosquitto.so.1
 
 %files -n libmosquitto-devel
@@ -160,6 +166,7 @@ fi
 %{_includedir}/mosquitto_broker.h
 %{_includedir}/mosquitto.h
 %{_includedir}/mosquitto_plugin.h
+%{_includedir}/mqtt_protocol.h
 %{_pkgconfigdir}/libmosquitto.pc
 %{_pkgconfigdir}/libmosquittopp.pc
 
