@@ -9,13 +9,15 @@ Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
 # Source0-md5:	abe42d8cdb4ec973bdbecc6da29cb98f
 URL:		http://mosquitto.org/
-BuildRequires:	cmake
+BuildRequires:	cmake >= 3.0
 BuildRequires:	cjson-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
+BuildRequires:	libxslt-progs
 BuildRequires:	openssl-devel
-BuildRequires:	rpmbuild(macros) >= 1.219
-BuildRequires:	sqlite3-devel >= 3.5
+BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.605
+BuildRequires:	uthash-devel
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -92,7 +94,7 @@ install -d build
 cd build
 %cmake \
 	-DUSE_LIBWRAP:BOOL=ON \
-	-DWITH_BUNDLED_DEPS:BOOL=ON \
+	-DWITH_BUNDLED_DEPS:BOOL=OFF \
 	..
 %{__make}
 cd ..
