@@ -2,12 +2,12 @@
 # - initscript
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	2.0.14
+Version:	2.0.15
 Release:	1
 License:	BSD
 Group:		Applications
 Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	abe42d8cdb4ec973bdbecc6da29cb98f
+# Source0-md5:	22b7a8b05caa692cb22496b791529193
 URL:		http://mosquitto.org/
 BuildRequires:	cmake >= 3.0
 BuildRequires:	cjson-devel
@@ -17,6 +17,7 @@ BuildRequires:	libxslt-progs
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.605
+BuildRequires:	systemd-devel
 BuildRequires:	uthash-devel
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -59,7 +60,6 @@ using a publish/subscribe model.
 %package -n libmosquitto-devel
 Summary:	MQTT C client library development files
 Group:		Development/Libraries
-Group:		Development/Libraries
 Requires:	libmosquitto = %{version}-%{release}
 
 %description -n libmosquitto-devel
@@ -80,6 +80,7 @@ using a publish/subscribe model.
 Summary:	MQTT C++ client library development files
 Group:		Development/Libraries
 Requires:	libmosquittopp = %{version}-%{release}
+Requires:	libmosquitto-devel = %{version}-%{release}
 
 %description -n libmosquittopp-devel
 This is a library that provides a means of implementing MQTT version 3
@@ -95,6 +96,7 @@ cd build
 %cmake \
 	-DUSE_LIBWRAP:BOOL=ON \
 	-DWITH_BUNDLED_DEPS:BOOL=OFF \
+	-DWITH_SYSTEMD:BOOL=ON \
 	..
 %{__make}
 cd ..
@@ -138,6 +140,7 @@ fi
 %attr(755,root,root) %{_bindir}/mosquitto_ctrl
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
+%attr(755,root,root) %{_libdir}/mosquitto_dynamic_security.so
 %{_mandir}/man1/mosquitto_ctrl.1*
 %{_mandir}/man1/mosquitto_ctrl_dynsec.1*
 %{_mandir}/man1/mosquitto_passwd.1*
@@ -158,7 +161,6 @@ fi
 %files -n libmosquitto
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libmosquitto.so.*.*.*
-%attr(755,root,root) %{_libdir}/mosquitto_dynamic_security.so
 %ghost %{_libdir}/libmosquitto.so.1
 
 %files -n libmosquitto-devel
