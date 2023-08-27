@@ -151,11 +151,11 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt README.md examples aclfile.example mosquitto.conf pskfile.example pwfile.example
-%dir %{_sysconfdir}/%{name}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
-%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
-%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
-%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pwfile
+%attr(700,mosquitto,mosquitto) %dir %{_sysconfdir}/%{name}
+%attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
+%attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
+%attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
+%attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pwfile
 %attr(755,root,root) %{_bindir}/mosquitto_ctrl
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
