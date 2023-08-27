@@ -6,7 +6,7 @@ Version:	2.0.15
 Release:	1
 License:	BSD
 Group:		Applications
-Source0:	http://mosquitto.org/files/source/%{name}-%{version}.tar.gz
+Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
 # Source0-md5:	22b7a8b05caa692cb22496b791529193
 URL:		http://mosquitto.org/
 BuildRequires:	cmake >= 3.0
