@@ -1,5 +1,9 @@
 # TODO
 # - initscript
+#
+# Conditional build:
+%bcond_without	systemd		# systemd support
+
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
 Version:	2.0.17
@@ -8,6 +12,7 @@ License:	BSD
 Group:		Applications
 Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
 # Source0-md5:	ecdd48b9bdc5fbb24b9bf1fb199253f7
+Source1:	mosquitto.service
 URL:		http://mosquitto.org/
 BuildRequires:	cmake >= 3.1
 BuildRequires:	cjson-devel
@@ -16,8 +21,8 @@ BuildRequires:	libwrap-devel
 BuildRequires:	libxslt-progs
 BuildRequires:	openssl-devel
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.605
-BuildRequires:	systemd-devel
+BuildRequires:	rpmbuild(macros) >= 1.742
+%{?with_systemd:BuildRequires:	systemd-devel}
 BuildRequires:	uthash-devel
 Requires(postun):	/usr/sbin/groupdel
 Requires(postun):	/usr/sbin/userdel
@@ -96,7 +101,7 @@ cd build
 %cmake \
 	-DUSE_LIBWRAP:BOOL=ON \
 	-DWITH_BUNDLED_DEPS:BOOL=OFF \
-	-DWITH_SYSTEMD:BOOL=ON \
+	%{cmake_on_off systemd SYSTEMD} \
 	..
 %{__make}
 cd ..
@@ -111,6 +116,8 @@ for file in aclfile pskfile pwfile ; do
 	:> $RPM_BUILD_ROOT/etc/%{name}/$file
 done
 
+%{?with_systemd:install -D %{SOURCE1} $RPM_BUILD_ROOT%{systemdunitdir}/mosquitto.service}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -123,11 +130,23 @@ if [ "$1" = "0" ]; then
 	%groupremove mosquitto
 fi
 
+%post
+%{?with_systemd:%systemd_post mosquitto.service}
+
+%preun
+%{?with_systemd:%systemd_preun mosquitto.service}
+
+%postun
+%{?with_systemd:%systemd_reload}
+
 %post	-n libmosquitto -p /sbin/ldconfig
 %postun	-n libmosquitto -p /sbin/ldconfig
 
 %post	-n libmosquittopp -p /sbin/ldconfig
 %postun	-n libmosquittopp -p /sbin/ldconfig
+
+%triggerpostun -- mosquitto < 2.0.17
+%systemd_trigger mosquitto.service
 
 %files
 %defattr(644,root,root,755)
@@ -141,6 +160,7 @@ fi
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
 %attr(755,root,root) %{_libdir}/mosquitto_dynamic_security.so
+%{?with_systemd:%{systemdunitdir}/mosquitto.service}
 %{_mandir}/man1/mosquitto_ctrl.1*
 %{_mandir}/man1/mosquitto_ctrl_dynsec.1*
 %{_mandir}/man1/mosquitto_passwd.1*
