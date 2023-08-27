@@ -9,7 +9,7 @@ Group:		Applications
 Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
 # Source0-md5:	22b7a8b05caa692cb22496b791529193
 URL:		http://mosquitto.org/
-BuildRequires:	cmake >= 3.0
+BuildRequires:	cmake >= 3.1
 BuildRequires:	cjson-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
