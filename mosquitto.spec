@@ -14,8 +14,8 @@ Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
 # Source0-md5:	ecdd48b9bdc5fbb24b9bf1fb199253f7
 Source1:	mosquitto.service
 URL:		http://mosquitto.org/
-BuildRequires:	cmake >= 3.1
 BuildRequires:	cjson-devel
+BuildRequires:	cmake >= 3.1
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	libxslt-progs
@@ -96,8 +96,8 @@ using a publish/subscribe model.
 %package -n libmosquittopp-devel
 Summary:	MQTT C++ client library development files
 Group:		Development/Libraries
-Requires:	libmosquittopp = %{version}-%{release}
 Requires:	libmosquitto-devel = %{version}-%{release}
+Requires:	libmosquittopp = %{version}-%{release}
 
 %description -n libmosquittopp-devel
 This is a library that provides a means of implementing MQTT version 3
