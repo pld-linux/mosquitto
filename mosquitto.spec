@@ -30,10 +30,13 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
-Suggests:	%{name}-clients
+Suggests:	%{name}-clients = %{version}-%{release}
+Suggests:	%{name}-plugin-dynamic-security = %{version}-%{release}
 Provides:	group(mosquitto)
 Provides:	user(mosquitto)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		dynsec_plugin_path	%{_libdir}/mosquitto_dynamic_security.so
 
 %description
 Mosquitto is an open source (BSD licensed) message broker that
@@ -52,6 +55,15 @@ Requires:	libmosquitto = %{version}-%{release}
 %description clients
 This is two MQTT version 3 clients. The first can publish messages to
 a broker, the second can subscribe to multiple topics on a broker.
+
+%package plugin-dynamic-security
+Summary:	Mosquitto Dynamic Security plugin
+Requires:	%{name} = %{version}-%{release}
+
+%description plugin-dynamic-security
+The Dynamic Security plugin is a Mosquitto plugin which provides role
+based authentication and access control features that can be updated
+whilst the broker is running, using a special topic based API.
 
 %package -n libmosquitto
 Summary:	MQTT C client library
@@ -123,6 +135,11 @@ cat <<EOF >> $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/%{name}.conf
 include_dir %{_sysconfdir}/mosquitto/conf.d
 EOF
 
+cat <<EOF >> $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/conf.d/90-dynamic-security.conf
+plugin %{dynsec_plugin_path}
+#plugin_opt_config_file %{_sysconfdir}/mosquitto/dynamic-security.json
+EOF
+
 %{?with_systemd:install -D %{SOURCE1} $RPM_BUILD_ROOT%{systemdunitdir}/mosquitto.service}
 
 %clean
@@ -167,7 +184,6 @@ fi
 %attr(755,root,root) %{_bindir}/mosquitto_ctrl
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
-%attr(755,root,root) %{_libdir}/mosquitto_dynamic_security.so
 %{?with_systemd:%{systemdunitdir}/mosquitto.service}
 %{_mandir}/man1/mosquitto_ctrl.1*
 %{_mandir}/man1/mosquitto_ctrl_dynsec.1*
@@ -185,6 +201,11 @@ fi
 %{_mandir}/man1/mosquitto_pub.1*
 %{_mandir}/man1/mosquitto_rr.1*
 %{_mandir}/man1/mosquitto_sub.1*
+
+%files plugin-dynamic-security
+%defattr(644,root,root,755)
+%attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/conf.d/90-dynamic-security.conf
+%attr(755,root,root) %{dynsec_plugin_path}
 
 %files -n libmosquitto
 %defattr(644,root,root,755)
