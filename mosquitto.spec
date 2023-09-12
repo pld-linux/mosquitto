@@ -112,8 +112,8 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 for file in aclfile pskfile pwfile ; do
-	%{__rm} $RPM_BUILD_ROOT/etc/mosquitto/$file.example
-	:> $RPM_BUILD_ROOT/etc/%{name}/$file
+	%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/$file.example
+	:> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/$file
 done
 
 %{?with_systemd:install -D %{SOURCE1} $RPM_BUILD_ROOT%{systemdunitdir}/mosquitto.service}
