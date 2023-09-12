@@ -113,7 +113,7 @@ cd build
 %cmake \
 	-DUSE_LIBWRAP:BOOL=ON \
 	-DWITH_BUNDLED_DEPS:BOOL=OFF \
-	%{cmake_on_off systemd SYSTEMD} \
+	%{cmake_on_off systemd WITH_SYSTEMD} \
 	..
 %{__make}
 cd ..
