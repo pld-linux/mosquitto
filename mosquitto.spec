@@ -108,6 +108,9 @@ cd ..
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/conf.d
+
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
@@ -115,6 +118,10 @@ for file in aclfile pskfile pwfile ; do
 	%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/$file.example
 	:> $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/$file
 done
+
+cat <<EOF >> $RPM_BUILD_ROOT%{_sysconfdir}/mosquitto/%{name}.conf
+include_dir %{_sysconfdir}/mosquitto/conf.d
+EOF
 
 %{?with_systemd:install -D %{SOURCE1} $RPM_BUILD_ROOT%{systemdunitdir}/mosquitto.service}
 
@@ -152,6 +159,7 @@ fi
 %defattr(644,root,root,755)
 %doc LICENSE.txt CONTRIBUTING.md ChangeLog.txt README.md examples aclfile.example mosquitto.conf pskfile.example pwfile.example
 %attr(700,mosquitto,mosquitto) %dir %{_sysconfdir}/%{name}
+%attr(700,mosquitto,mosquitto) %dir %{_sysconfdir}/%{name}/conf.d
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/%{name}.conf
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
