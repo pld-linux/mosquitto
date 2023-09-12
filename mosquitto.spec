@@ -30,6 +30,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Suggests:	%{name}-admin = %{version}-%{release}
 Suggests:	%{name}-clients = %{version}-%{release}
 Suggests:	%{name}-plugin-dynamic-security = %{version}-%{release}
 Provides:	group(mosquitto)
@@ -46,6 +47,14 @@ publish/subscribe model. This makes it suitable for "machine to
 machine" messaging such as with low power sensors or mobile devices
 such as phones, embedded computers or micro-controllers like the
 Arduino.
+
+%package admin
+Summary:	Tools to manage Mosquitto configuration
+Group:		Applications/Networking
+Requires:	libmosquitto = %{version}-%{release}
+
+%description admin
+Tools to manage Mosquitto configuration.
 
 %package clients
 Summary:	Mosquitto command line pub/sub clients
@@ -181,17 +190,20 @@ fi
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/aclfile
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pskfile
 %attr(600,mosquitto,mosquitto) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/pwfile
-%attr(755,root,root) %{_bindir}/mosquitto_ctrl
 %attr(755,root,root) %{_bindir}/mosquitto_passwd
 %attr(755,root,root) %{_sbindir}/mosquitto
 %{?with_systemd:%{systemdunitdir}/mosquitto.service}
-%{_mandir}/man1/mosquitto_ctrl.1*
-%{_mandir}/man1/mosquitto_ctrl_dynsec.1*
 %{_mandir}/man1/mosquitto_passwd.1*
 %{_mandir}/man5/mosquitto.conf.5*
 %{_mandir}/man7/mosquitto-tls.7*
 %{_mandir}/man7/mqtt.7*
 %{_mandir}/man8/mosquitto.8*
+
+%files admin
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mosquitto_ctrl
+%{_mandir}/man1/mosquitto_ctrl.1*
+%{_mandir}/man1/mosquitto_ctrl_dynsec.1*
 
 %files clients
 %defattr(644,root,root,755)
