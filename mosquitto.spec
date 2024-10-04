@@ -6,16 +6,16 @@
 
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	2.0.18
+Version:	2.0.19
 Release:	1
 License:	BSD
 Group:		Applications
 Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	7fe95d0bef1aacd291d21d7752fbd21b
+# Source0-md5:	322e97245e23de126d64b66aa215de9c
 Source1:	mosquitto.service
 URL:		http://mosquitto.org/
 BuildRequires:	cjson-devel
-BuildRequires:	cmake >= 3.1
+BuildRequires:	cmake >= 3.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libwrap-devel
 BuildRequires:	libxslt-progs
