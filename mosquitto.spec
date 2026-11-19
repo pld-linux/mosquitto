@@ -6,12 +6,12 @@
 
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	2.0.22
+Version:	2.0.23
 Release:	1
 License:	BSD
 Group:		Applications
 Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	3a239d3d50121134537798e0c6b6af11
+# Source0-md5:	888694eeac4ca036aca2a3ef2d544f70
 Source1:	mosquitto.service
 URL:		http://mosquitto.org/
 BuildRequires:	cjson-devel
