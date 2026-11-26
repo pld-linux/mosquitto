@@ -6,12 +6,12 @@
 
 Summary:	An Open Source MQTT v3.1 Broker
 Name:		mosquitto
-Version:	2.0.23
+Version:	2.1.4
 Release:	1
 License:	BSD
 Group:		Applications
 Source0:	https://mosquitto.org/files/source/%{name}-%{version}.tar.gz
-# Source0-md5:	888694eeac4ca036aca2a3ef2d544f70
+# Source0-md5:	2b1d9a01f3de0238fdf5040eb0b65038
 Source1:	mosquitto.service
 URL:		http://mosquitto.org/
 BuildRequires:	cjson-devel
@@ -120,6 +120,7 @@ using a publish/subscribe model.
 %cmake -B build \
 	-DUSE_LIBWRAP:BOOL=ON \
 	-DWITH_BUNDLED_DEPS:BOOL=OFF \
+	-DWITH_TESTS:BOOL=OFF \
 	%{cmake_on_off systemd WITH_SYSTEMD}
 
 %{__make} -C build
